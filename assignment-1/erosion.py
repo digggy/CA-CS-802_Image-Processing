@@ -56,8 +56,10 @@ def erosion_f2():
     vertical_SE = np.array([[1],[1], [1]])
     f2_with_boundary = np.ones((f2.shape[0]+2, f2.shape[1]))
     f2_with_boundary[1:f2.shape[0]+1, 0:f2.shape[1]] = f2
-    f2_with_boundary[0, 0:f2.shape[1]] = np.array([np.inf, np.inf, np.inf, np.inf, np.inf])
-    f2_with_boundary[f2.shape[0]+1, 0:f2.shape[1]] = np.array([np.inf, np.inf, np.inf, np.inf, np.inf])
+    # f2_with_boundary[0, 0:f2.shape[1]] = np.array([255, 255, 255, 255, 255])
+    # f2_with_boundary[f2.shape[0]+1, 0:f2.shape[1]] = np.array([255, 255, 255, 255, 255])
+    f2_with_boundary[0, 0:f2.shape[1]].fill(255)
+    f2_with_boundary[f2.shape[0]+1, 0:f2.shape[1]].fill(255)
     f2_erosion = np.zeros((f2.shape[0], f2.shape[1]), int)
     # print(f2_with_boundary)
 
@@ -86,8 +88,8 @@ def erosion_f3_horizontal():
     f3_with_boundary = np.ones((f3.shape[0], f3.shape[1]+2))
 
     for i in range(f3.shape[0]):
-        f3_with_boundary[i, 0] = np.inf
-        f3_with_boundary[i, f3.shape[1]+1] = np.inf
+        f3_with_boundary[i, 0] = 255
+        f3_with_boundary[i, f3.shape[1]+1] = 255
 
     f3_with_boundary[0:f3.shape[0], 1:f3.shape[1]+1] = f3
     # print(f3_with_boundary)
@@ -105,7 +107,6 @@ def erosion_f3_horizontal():
     # img.save('f3-result.png').show() 
 
 
-
 def erosion_f3_square_five():
 
     square_five_ones = np.ones((5,5), int)
@@ -114,21 +115,57 @@ def erosion_f3_square_five():
     f3_with_boundary = np.ones((f3.shape[0], f3.shape[1]+2))
 
     for i in range(f3.shape[0]):
-        f3_with_boundary[i, 0] = np.inf
-        f3_with_boundary[i, f3.shape[1]+1] = np.inf
+        f3_with_boundary[i, 0] = 255
+        f3_with_boundary[i, f3.shape[1]+1] = 255
 
     f3_with_boundary[0:f3.shape[0], 1:f3.shape[1]+1] = f3
-    # print(f3_with_boundary)
-
     f3_erosion = np.zeros((f3.shape[0], f3.shape[1]), int)
-    horizontal_SE = np.array([1,1,1])
-    for i in range(f3.shape[0]):
-        for j in range(f3.shape[1]):
-            f3_subarr = f3_with_boundary[i:i+3, j:j+3]
+    square_five_ones_SE = np.ones((5,5), int)
+
+
+    for i in range(f3_with_boundary.shape[0]-5):
+        for j in range(f3_with_boundary.shape[1]-5):
+            f3_subarr = f3_with_boundary[i:i+5, j:j+5]
+            print(f3_subar)
             f3_erosion[i,j] = np.min(f3_subarr)
 
-    print(f3_erosion)    
+    print(f3_with_boundary)    
     
 
+def erosion_f3_backward_diagonal():
+
+    backward_nine_SE = np.eye(9)
+    f3 = read_f3_values()
+    f3_with_boundary = np.zeros((f3.shape[0]+2, f3.shape[1]+2))
+
+    f3_with_boundary.fill(255)
+    f3_with_boundary[0:f3.shape[0], 1:f3.shape[1]+1] = f3
+    f3_erosion = np.zeros((f3.shape[0], f3.shape[1]), int)
+
+    for i in range(f3_with_boundary.shape[0]-9):
+        for j in range(f3_with_boundary.shape[0]-9):
+            f3_subarr = f3_with_boundary[i:i+backward_nine_SE.shape[0], j:j+backward_nine_SE.shape[1]]
+            f3_erosion[i,j] = np.min(np.diagonal(f3_subarr))
+    
+    print(f3_erosion)
+
+def erosion_f3_forward_diagonal():
+    
+    forward_nine_SE = np.flip(np.eye(9), 1)
+    
+    f3 = read_f3_values()
+    f3_with_boundary = np.zeros((f3.shape[0]+2, f3.shape[1]+2))
+
+    f3_with_boundary.fill(255)
+    f3_with_boundary[0:f3.shape[0], 1:f3.shape[1]+1] = f3
+    f3_erosion = np.zeros((f3.shape[0], f3.shape[1]), int)
+
+    for i in range(f3_with_boundary.shape[0]-9):
+        for j in range(f3_with_boundary.shape[0]-9):
+            f3_subarr = f3_with_boundary[i:i+forward_nine_SE.shape[0], j:j+forward_nine_SE.shape[1]]
+            f3_erosion[i,j] = np.min(np.diagonal(f3_subarr))
+    
+    print(f3_erosion)
+
 if __name__ == "__main__":
-    erosion_f3_square_five()
+    erosion_f3_forward_diagonal()
