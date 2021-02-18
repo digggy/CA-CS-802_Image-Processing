@@ -58,7 +58,7 @@ def erosion_f2():
     f2_with_boundary[1:f2.shape[0]+1, 0:f2.shape[1]] = f2
     
     f2_with_boundary[0, 0:f2.shape[1]].fill(5)
-    f2_with_boundary[f2.shape[0]+1, 0:f2.shape[1]].fill(5)
+    f2_with_boundary[f2.shape[0]+1, 0:f2.shape[1]].fill(np.max(f2))
     f2_erosion = np.zeros((f2.shape[0], f2.shape[1]), int)
     # print(f2_with_boundary)
 
