@@ -62,6 +62,7 @@ EXPERIMENTS: 11+4 pairs of input image f and SE to apply (output file names spec
 * erosion of f3 by square of size 5 (-> ef3_e3.txt)
 * erosion of f3 by backward diagonal (\) of length 9 (-> ef3_e4.txt)
 * erosion of f3 by forward diagonal (/) of length 9 (-> ef3_e5.txt)
+
 * dilation of f3 by square of size 5 (-> df3_d3.txt)
 * dilation of f3 by backward diagonal of length 9 (-> df3_d4.txt)
 * dilation of f3 by forward diagonal of length 9 (-> df3_d5.txt)
