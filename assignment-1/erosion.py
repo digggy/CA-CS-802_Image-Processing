@@ -56,10 +56,9 @@ def erosion_f2():
     vertical_SE = np.array([[1],[1], [1]])
     f2_with_boundary = np.ones((f2.shape[0]+2, f2.shape[1]))
     f2_with_boundary[1:f2.shape[0]+1, 0:f2.shape[1]] = f2
-    # f2_with_boundary[0, 0:f2.shape[1]] = np.array([255, 255, 255, 255, 255])
-    # f2_with_boundary[f2.shape[0]+1, 0:f2.shape[1]] = np.array([255, 255, 255, 255, 255])
-    f2_with_boundary[0, 0:f2.shape[1]].fill(255)
-    f2_with_boundary[f2.shape[0]+1, 0:f2.shape[1]].fill(255)
+    
+    f2_with_boundary[0, 0:f2.shape[1]].fill(5)
+    f2_with_boundary[f2.shape[0]+1, 0:f2.shape[1]].fill(5)
     f2_erosion = np.zeros((f2.shape[0], f2.shape[1]), int)
     # print(f2_with_boundary)
 
@@ -168,4 +167,4 @@ def erosion_f3_forward_diagonal():
     print(f3_erosion)
 
 if __name__ == "__main__":
-    erosion_f3_forward_diagonal()
+    erosion_f2()
