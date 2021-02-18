@@ -70,16 +70,18 @@ def erosion_f2():
     print(f2_erosion)
 
 
-
-def erosion_f3():
-
+def read_f3_values():
     f3_from_txt = []
     with open('f3.txt','r') as f1_csv:
         csv_reader = csv.reader(f1_csv)
         for line in csv_reader:
             f3_from_txt.append(list(map(int, line)))
+    
+    f3 = np.array(f3_from_txt)
+    return f3
 
-    f3 = np.array(f3_from_txt)      
+def erosion_f3_horizontal():
+    f3 = read_f3_values
    
     f3_with_boundary = np.ones((f3.shape[0], f3.shape[1]+2))
 
@@ -96,11 +98,37 @@ def erosion_f3():
         for j in range(f3.shape[1]):
             f3_subarr = f3_with_boundary[i, j:j+3]
             f3_erosion[i,j] = np.min(f3_subarr)
-            
+
     print(f3_erosion)
     
     # img = im.fromarray(f3_erosion) 
     # img.save('f3-result.png').show() 
 
+
+
+def erosion_f3_square_five():
+
+    square_five_ones = np.ones((5,5), int)
+    f3 = read_f3_values()
+
+    f3_with_boundary = np.ones((f3.shape[0], f3.shape[1]+2))
+
+    for i in range(f3.shape[0]):
+        f3_with_boundary[i, 0] = np.inf
+        f3_with_boundary[i, f3.shape[1]+1] = np.inf
+
+    f3_with_boundary[0:f3.shape[0], 1:f3.shape[1]+1] = f3
+    # print(f3_with_boundary)
+
+    f3_erosion = np.zeros((f3.shape[0], f3.shape[1]), int)
+    horizontal_SE = np.array([1,1,1])
+    for i in range(f3.shape[0]):
+        for j in range(f3.shape[1]):
+            f3_subarr = f3_with_boundary[i:i+3, j:j+3]
+            f3_erosion[i,j] = np.min(f3_subarr)
+
+    print(f3_erosion)    
+    
+
 if __name__ == "__main__":
-    erosion_f3()
+    erosion_f3_square_five()
