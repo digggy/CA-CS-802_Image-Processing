@@ -105,7 +105,7 @@ def morph_operation(img, SE, operation_type, direction, output_filename):
     plt.title('Image after operation')
     plt.axis('off') if turn_off_axes else None
     # plt.show()
-    plt.savefig(output_filename + ".png", bbox_inches='tight')
+    plt.savefig(".\output\\"+ output_filename + ".png", bbox_inches='tight')
 
     ##################################################
 
@@ -154,7 +154,7 @@ def main():
     
     img_output = morph_operation(img, SE, operation_type, direction, os.path.splitext(filenames[2])[0])
 
-    np.savetxt(filenames[2], img_output,
+    np.savetxt(".\output\\" + filenames[2], img_output,
                delimiter=', ', newline='\n', fmt='%d')
 
 
