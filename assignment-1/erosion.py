@@ -113,20 +113,19 @@ def erosion_f3_square_five():
 
     f3_with_boundary = np.ones((f3.shape[0], f3.shape[1]+2))
 
-    for i in range(f3.shape[0]):
-        f3_with_boundary[i, 0] = 255
-        f3_with_boundary[i, f3.shape[1]+1] = 255
+    padding_y , padding_x = square_five_ones.shape[0]//2, square_five_ones.shape[1]//2 
+    f3_with_boundary = np.pad(f3, ((padding_y, padding_y),(padding_x, padding_x)), mode='constant', constant_values=255)
 
-    f3_with_boundary[0:f3.shape[0], 1:f3.shape[1]+1] = f3
+    # f3_with_boundary[0:f3.shape[0], 1:f3.shape[1]+1] = f3
     f3_erosion = np.zeros((f3.shape[0], f3.shape[1]), int)
     square_five_ones_SE = np.ones((5,5), int)
 
 
-    for i in range(f3_with_boundary.shape[0]-5):
-        for j in range(f3_with_boundary.shape[1]-5):
+    for i in range(f3.shape[0]):
+        for j in range(f3.shape[1]):
             f3_subarr = f3_with_boundary[i:i+5, j:j+5]
             
-            f3_erosion[i,j] = np.min(f3_subarr)
+            f3_erosion[i,j] = np.amin(f3_subarr)
 
     np.savetxt('ef3_e3.txt', f3_erosion,
                delimiter=', ', newline='\n', fmt='%d')
@@ -136,14 +135,14 @@ def erosion_f3_backward_diagonal():
 
     backward_nine_SE = np.eye(9)
     f3 = read_f3_values()
-    f3_with_boundary = np.zeros((f3.shape[0]+2, f3.shape[1]+2))
+    
+    padding_y , padding_x = backward_nine_SE.shape[0]//2, backward_nine_SE.shape[1]//2 
+    f3_with_boundary = np.pad(f3, ((padding_y, padding_y),(padding_x, padding_x)), mode='constant', constant_values=255)
 
-    f3_with_boundary.fill(255)
-    f3_with_boundary[0:f3.shape[0], 1:f3.shape[1]+1] = f3
     f3_erosion = np.zeros((f3.shape[0], f3.shape[1]), int)
 
-    for i in range(f3_with_boundary.shape[0]-9):
-        for j in range(f3_with_boundary.shape[0]-9):
+    for i in range(f3.shape[0]):
+        for j in range(f3.shape[1]):
             f3_subarr = f3_with_boundary[i:i+backward_nine_SE.shape[0], j:j+backward_nine_SE.shape[1]]
             f3_erosion[i,j] = np.min(np.diagonal(f3_subarr))
     
@@ -155,10 +154,8 @@ def erosion_f3_forward_diagonal():
     forward_nine_SE = np.flip(np.eye(9), 1)
     
     f3 = read_f3_values()
-    f3_with_boundary = np.zeros((f3.shape[0]+2, f3.shape[1]+2))
-
-    f3_with_boundary.fill(255)
-    f3_with_boundary[0:f3.shape[0], 1:f3.shape[1]+1] = f3
+    padding_y , padding_x = forward_nine_SE.shape[0]//2, forward_nine_SE.shape[1]//2 
+    f3_with_boundary = np.pad(f3, ((padding_y, padding_y),(padding_x, padding_x)), mode='constant', constant_values=255)
     f3_erosion = np.zeros((f3.shape[0], f3.shape[1]), int)
 
     for i in range(f3_with_boundary.shape[0]-9):
@@ -170,4 +167,6 @@ def erosion_f3_forward_diagonal():
                delimiter=', ', newline='\n', fmt='%d')
 
 if __name__ == "__main__":
-    erosion_f3_horizontal()
+    erosion_f3_square_five()
+    erosion_f3_backward_diagonal()
+    erosion_f3_forward_diagonal()
