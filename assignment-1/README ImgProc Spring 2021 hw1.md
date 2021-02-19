@@ -68,6 +68,7 @@ EXPERIMENTS: 11+4 pairs of input image f and SE to apply (output file names spec
 * dilation of f3 by forward diagonal of length 9 (-> df3_d5.txt)
 * dilation of 'ef3_e3.txt' by square of size 5 (-> of3_o3.txt, which is then the opening of f3 by the square of size 5)
 * dilation of 'ef3_e4.txt' by backward diagonal of length 9 (-> of3_o4.txt, which is then the opening of f3 by the backward diagonal of length 9)
+
 * one self-chosen experiment with an asymmetric SE not containing the center (cf. above, add input/output file names to the respective report section)
 * at least three self-chosen images and experiments (cf. above, add input/output file names to the respective report section)
 
