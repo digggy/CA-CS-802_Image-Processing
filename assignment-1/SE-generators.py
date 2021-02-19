@@ -2,11 +2,11 @@ import numpy as np
 import csv
 
 def write_SEs():
-    f1 = np.array([[1, 1, 1, ],
+    SE = np.array([[1, 1, 1, ],
                    [1, 1, 1, ],
                    [1, 1, 1, ]])
 
-    np.savetxt('SE1.txt', f1, delimiter=', ', newline='\n', fmt='%d')
+    np.savetxt('SE1.txt', SE, delimiter=', ', newline='\n', fmt='%d')
 
     vertical_SE = np.array([[1], [1], [1]])
     np.savetxt('SE2.txt', vertical_SE, delimiter=', ', newline='\n', fmt='%d')
@@ -28,6 +28,12 @@ def write_SEs():
     np.savetxt('SE6.txt', np.flip(backward_nine_SE, 0),
                delimiter=', ', newline='\n', fmt='%d')
 
+    # asymmetric SE not containing the center
+    SE = np.array([[0, 1, 0 ],
+                [1, 0, 1 ],
+                [0, 0, 1 ]])
+    np.savetxt('SE_asym_no_origin.txt', SE ,
+            delimiter=', ', newline='\n', fmt='%d')
 
 if __name__ == "__main__":
     write_SEs()
