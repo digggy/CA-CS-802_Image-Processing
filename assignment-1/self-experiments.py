@@ -18,23 +18,27 @@ def self_experiment_1():
     
     SE_eleven = np.ones((11,11), int)
     
-    image_np_with_boundary = np.ones((image_np.shape[0]+2, image_np.shape[1]+2))
+    padding_y , padding_x = SE_eleven.shape[0]//2, SE_eleven.shape[1]//2 
+    image_np_with_boundary_erosion = np.pad(image_np, ((padding_y, padding_y),(padding_x, padding_x)), mode='constant', constant_values=255)
     
-    for i in range(image_np.shape[0]):
-        image_np_with_boundary[i, 0] = 255
-        image_np_with_boundary[i, image_np.shape[1]+1] = 255
-
-    image_np_with_boundary[0:image_np.shape[0], 1:image_np.shape[1]+1] = image_np
+    image_np_with_boundary_dilation = np.pad(image_np, ((padding_y, padding_y),(padding_x, padding_x)), mode='constant', constant_values=0)
+   
     img_erosion = np.zeros((image_np.shape[0], image_np.shape[1]), int)
     img_dilation = np.zeros((image_np.shape[0], image_np.shape[1]), int)
     square_five_ones_SE = np.ones((5,5), int)
 
 
-    for i in range(image_np_with_boundary.shape[0]-SE_eleven.shape[0]):
-        for j in range(image_np_with_boundary.shape[1]-SE_eleven.shape[1]):
-            img_subarr = image_np_with_boundary[i:i+SE_eleven.shape[0], j:j+SE_eleven.shape[1]]
+    for i in range(image_np_with_boundary_erosion.shape[0]-SE_eleven.shape[0]):
+        for j in range(image_np_with_boundary_erosion.shape[1]-SE_eleven.shape[1]):
+            img_subarr = image_np_with_boundary_erosion[i:i+SE_eleven.shape[0], j:j+SE_eleven.shape[1]]
             
             img_erosion[i,j] = np.min(img_subarr)
+            # img_dilation[i,j] = np.max(img_subarr)
+
+    for i in range(image_np_with_boundary_dilation.shape[0]-SE_eleven.shape[0]):
+        for j in range(image_np_with_boundary_dilation.shape[1]-SE_eleven.shape[1]):
+            img_subarr = image_np_with_boundary_dilation[i:i+SE_eleven.shape[0], j:j+SE_eleven.shape[1]]
+            
             img_dilation[i,j] = np.max(img_subarr)
 
     np.savetxt('self_experiment_1_erosion.txt', img_erosion,

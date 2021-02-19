@@ -1,11 +1,12 @@
+import os.path
 import argparse
 import numpy as np
 from numpy import genfromtxt
 from matplotlib import pyplot as plt
-# plt.rcParams["figure.figsize"] = (25, 5)
+plt.rcParams["figure.figsize"] = (25, 5)
 
 
-def morph_operation(img, SE, operation_type, direction):
+def morph_operation(img, SE, operation_type, direction, output_filename):
 
     if(direction == "vertical"):
         SE = SE.reshape(SE.shape[0], 1)
@@ -56,6 +57,58 @@ def morph_operation(img, SE, operation_type, direction):
                 img_output[i, j] = np.amin(img_subarr_filtered)
             elif(operation_dilation):
                 img_output[i, j] = np.amax(img_subarr_filtered)
+
+    ################ Plot Save #########################
+
+    plt.subplot(1, 4, 1)
+    # grid for the image
+    ax = plt.gca()
+    ax.set_xticks(np.arange(-.5, 10, 1), minor=True)
+    ax.set_yticks(np.arange(-.5, 10, 1), minor=True)
+    ax.grid(which='minor', color='b', linestyle='-', linewidth=1)
+    plt.imshow(SE, cmap='gray', vmin=0, vmax=1)
+    plt.title('SE')
+    plt.axis('off') if turn_off_axes else None
+
+    # plot main images
+    plt.subplot(1, 4, 2)
+    # grid for the image
+    ax = plt.gca()
+    ax.set_xticks(np.arange(-.5, 10, 1), minor=True)
+    ax.set_yticks(np.arange(-.5, 10, 1), minor=True)
+    ax.grid(which='minor', color='b', linestyle='-', linewidth=1)
+
+    plt.imshow(img, cmap='gray', vmin=0, vmax=vmax)
+    plt.title('img')
+    plt.axis('off') if turn_off_axes else None
+
+    # Plot the bordered image
+    plt.subplot(1, 4, 3)
+    # grid for the image
+    ax = plt.gca()
+    ax.set_xticks(np.arange(-.5, 10, 1), minor=True)
+    ax.set_yticks(np.arange(-.5, 10, 1), minor=True)
+    ax.grid(which='minor', color='b', linestyle='-', linewidth=1)
+
+    plt.imshow(img_with_boundary, cmap='gray', vmin=0, vmax=vmax)
+    plt.title('img_with_boundary')
+    plt.axis('off') if turn_off_axes else None
+
+    # Plot the exepected output
+    plt.subplot(1, 4, 4)
+    ax = plt.gca()
+    ax.set_xticks(np.arange(-.5, 10, 1), minor=True)
+    ax.set_yticks(np.arange(-.5, 10, 1), minor=True)
+    ax.grid(which='minor', color='b', linestyle='-', linewidth=1)
+
+    plt.imshow(img_output, cmap='gray', vmin=0, vmax=vmax)
+    plt.title('eroded')
+    plt.axis('off') if turn_off_axes else None
+    # plt.show()
+    plt.savefig(output_filename + ".png", bbox_inches='tight')
+
+    ##################################################
+
     return img_output
 
 
@@ -99,7 +152,7 @@ def main():
     if("SE3.txt" in filenames[0]):
         direction = "horizontal"
     
-    img_output = morph_operation(img, SE, operation_type, direction)
+    img_output = morph_operation(img, SE, operation_type, direction, os.path.splitext(filenames[2])[0])
 
     np.savetxt(filenames[2], img_output,
                delimiter=', ', newline='\n', fmt='%d')
