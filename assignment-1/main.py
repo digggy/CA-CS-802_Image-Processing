@@ -68,7 +68,7 @@ def morph_operation(img, SE, operation_type, direction, output_filename):
     ax.grid(which='minor', color='b', linestyle='-', linewidth=1)
     plt.imshow(SE, cmap='gray', vmin=0, vmax=1)
     plt.title('SE')
-    plt.axis('off') if turn_off_axes else None
+    # plt.axis('off') if turn_off_axes else None
 
     # plot main images
     plt.subplot(1, 4, 2)
@@ -79,7 +79,7 @@ def morph_operation(img, SE, operation_type, direction, output_filename):
     ax.grid(which='minor', color='b', linestyle='-', linewidth=1)
 
     plt.imshow(img, cmap='gray', vmin=0, vmax=vmax)
-    plt.title('img')
+    plt.title('image')
     plt.axis('off') if turn_off_axes else None
 
     # Plot the bordered image
@@ -102,7 +102,7 @@ def morph_operation(img, SE, operation_type, direction, output_filename):
     ax.grid(which='minor', color='b', linestyle='-', linewidth=1)
 
     plt.imshow(img_output, cmap='gray', vmin=0, vmax=vmax)
-    plt.title('eroded')
+    plt.title('Image after operation')
     plt.axis('off') if turn_off_axes else None
     # plt.show()
     plt.savefig(output_filename + ".png", bbox_inches='tight')
