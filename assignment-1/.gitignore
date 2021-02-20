@@ -1,4 +1,5 @@
 /.env/*
 /.ipynb_checkpoints/*
 requirements.txt
-
+apple*
+cells1*
