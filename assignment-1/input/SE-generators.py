@@ -1,4 +1,7 @@
 import numpy as np
+import os.path
+from skimage import io
+from PIL import Image
 import csv
 
 
@@ -28,21 +31,45 @@ def write_SEs():
     # forward diagonal
     np.savetxt('SE6.txt', np.flip(backward_nine_SE, 0),
                delimiter=', ', newline='\n', fmt='%d')
-            
+
     # asymmetric SE not containing the center
-    SE = np.array([[0, 1, 0 ],
-                [1, 0, 1 ],
-                [0, 0, 1 ]])
-    np.savetxt('SE_asym_no_origin.txt', SE ,
-            delimiter=', ', newline='\n', fmt='%d')
+    SE = np.array([
+        [1, 0, 0, 0],
+        [0, 0, 1, 0],
+        [0, 1, 0, 1],
+        [0, 0, 1, 0],
+        [1, 0, 0, 0]
+    ])
+    np.savetxt('SE_asym_no_origin.txt', SE,
+               delimiter=', ', newline='\n', fmt='%d')
 
     # for wolf image
-    SE = np.array([[0, 1, 0 ],
-                [1, 1, 1 ],
-                [0, 1, 0 ]])
-    np.savetxt('SE7.txt', SE ,
-            delimiter=', ', newline='\n', fmt='%d')
+    SE = np.array([[0, 1, 0],
+                   [1, 1, 1],
+                   [0, 1, 0]])
+    np.savetxt('SE7.txt', SE,
+               delimiter=', ', newline='\n', fmt='%d')
+
+
+def input_img_to_csv(filename):
+    img = io.imread(filename, as_gray=True)
+    img = img/np.max(img)*255
+    img = img.astype(np.uint8)
+    np.savetxt(os.path.splitext(filename)[0] + ".txt", img,
+               delimiter=', ', newline='\n', fmt='%d')
+
+
+def images_to_csv():
+    input_img_to_csv("covid.png")
+    input_img_to_csv("fp.png")
+    input_img_to_csv("medusa.jpg")
+    input_img_to_csv("roots.png")
+    input_img_to_csv("sample_img1.jpg")
+    input_img_to_csv("sample_img2.jpg")
+    input_img_to_csv("sample_img3.jpg")
+    input_img_to_csv("wolf.jpg")
 
 
 if __name__ == "__main__":
     write_SEs()
+    images_to_csv()
