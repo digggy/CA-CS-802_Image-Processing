@@ -11,7 +11,6 @@ run:
 	python .\src\img-morp.py -d .\input\SE4.txt .\output\ef3_e3.txt .\output\of3_o3.txt
 	python .\src\img-morp.py -d .\input\SE5.txt .\output\ef3_e4.txt .\output\of3_o4.txt
 	python .\src\img-morp.py -d .\input\SE_asym_no_origin.txt .\input\fp.txt .\output\fingerprint-output.txt
-
 	python .\src\img-morp.py -d .\input\SE7.txt .\input\covid.txt .\output\covid.txt
 	python .\src\img-morp.py -e .\input\SE8.txt .\input\wolf.txt .\output\wolf_erosion.txt
 	python .\src\img-morp.py -d .\input\SE9.txt .\input\roots.txt .\output\roots_dilated.txt 
