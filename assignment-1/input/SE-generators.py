@@ -28,13 +28,21 @@ def write_SEs():
     # forward diagonal
     np.savetxt('SE6.txt', np.flip(backward_nine_SE, 0),
                delimiter=', ', newline='\n', fmt='%d')
-
+            
     # asymmetric SE not containing the center
     SE = np.array([[0, 1, 0 ],
                 [1, 0, 1 ],
                 [0, 0, 1 ]])
     np.savetxt('SE_asym_no_origin.txt', SE ,
             delimiter=', ', newline='\n', fmt='%d')
+
+    # for wolf image
+    SE = np.array([[0, 1, 0 ],
+                [1, 1, 1 ],
+                [0, 1, 0 ]])
+    np.savetxt('SE7.txt', SE ,
+            delimiter=', ', newline='\n', fmt='%d')
+
 
 if __name__ == "__main__":
     write_SEs()
