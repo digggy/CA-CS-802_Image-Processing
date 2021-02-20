@@ -107,7 +107,7 @@ def morph_operation(img, SE, operation_type, direction, output_filename):
     plt.title('Image after operation')
     plt.axis('off') if turn_off_axes else None
     # plt.show()
-    plt.savefig(".\output\\" + output_filename + ".png", bbox_inches='tight')
+    plt.savefig("output\\" + output_filename + ".png", bbox_inches='tight')
 
     ##################################################
 
@@ -148,7 +148,7 @@ def main():
     input_image_extension = os.path.splitext(filenames[1])[1]
     if(input_image_extension == ".png" or input_image_extension == ".jpg" or input_image_extension == ".jgeg"):
         img = io.imread(filenames[1], as_gray=True)
-        img =img/np.max(img)*255
+        img = img/np.max(img)*255
         img = img.astype(np.uint8)
     elif (input_image_extension == ".txt"):
         img = genfromtxt(filenames[1], delimiter=',').astype(int)
@@ -160,11 +160,11 @@ def main():
         direction = "vertical"
     if("SE3.txt" in filenames[0]):
         direction = "horizontal"
-
+    output_filename = os.path.splitext(os.path.basename(filenames[2]))[0]
     img_output = morph_operation(
-        img, SE, operation_type, direction, os.path.splitext(filenames[2])[0])
+        img, SE, operation_type, direction, output_filename)
 
-    np.savetxt(".\output\\" + filenames[2], img_output,
+    np.savetxt(filenames[2], img_output,
                delimiter=', ', newline='\n', fmt='%d')
 
 

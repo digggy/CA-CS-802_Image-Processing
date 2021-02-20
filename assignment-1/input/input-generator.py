@@ -60,6 +60,7 @@ def input_img_to_csv(filename):
 
 
 def images_to_csv():
+    # These are different inputs that we are converting to csv file format
     input_img_to_csv("covid.png")
     input_img_to_csv("fp.png")
     input_img_to_csv("medusa.jpg")
@@ -68,7 +69,6 @@ def images_to_csv():
     input_img_to_csv("sample_img2.jpg")
     input_img_to_csv("sample_img3.jpg")
     input_img_to_csv("wolf.jpg")
-
 
 if __name__ == "__main__":
     write_SEs()
