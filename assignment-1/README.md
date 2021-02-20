@@ -16,3 +16,5 @@ Inorder to get all the outputs with the respective images. Run the following com
 CA-CS-802_Image-Processing\assignment-1> make run
 ```
 
+Work was done in github repository in branches 'dev\_dku' and 'dev\_ewu' in [assignment-1](https://github.com/digggy/CA-CS-802_Image-Processing/tree/master/assignment-1).
+
