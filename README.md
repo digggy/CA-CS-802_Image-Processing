@@ -2,5 +2,6 @@
 The theory and applications of digital image processing
 
 assignment 1 -> morphological image processing
+
 assignment 2 -> watershed algorithm
 
