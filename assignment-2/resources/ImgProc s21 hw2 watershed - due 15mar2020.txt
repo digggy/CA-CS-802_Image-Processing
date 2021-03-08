@@ -1,0 +1,81 @@
+Image Processing (ImgProc) 
+Image Processing Course Spring 2021
+Homework 2 "WATERSHED TRANSFORM"
+
+
+HANDED OUT: 5-MAR-2021
+DUE DATE / TIME: 15-MAR-2021, 23:59 h
+
+
+SUBMISSION MODE:
+Send your homework implementation and results, following the submission requirements as explained below, via e-mail (subject: "ImgProc hw2 submission") to: 
+h.hahn@jacobs-university.de (instructor)
+
+
+TASK:
+
+Please implement the watershed algorithm as described as pseudo code in the attached pdf for 4-connected and 8-connected neighborhood 
+
+Note: pay attention that your algorithm and data loading can cope with signed input values. Several pixels have gray values less than zero!
+
+
+Please generate output images for these inputs:
+
+I) the inverse of the distance transform 'f1_dinv.txt' derived from a blob image
+
+II) the circle image (f2.txt). For this image, explain the differences between the 4- and 8-connected neighborhood implementations. Hint: 8-connected should produce much less regions - why? (write answers in the report file)
+
+III) plus three further images of your choice that shows multiple objects each to be segmented. Before applying the watershed transform, you must derive a suitable segmentation function through a method of your choice. This could include, for example, morphological gradient computation based on erosions and/or dilations, noise removal (e.g. median filter) or smoothing (e.g. bilateral or binomial filter) of the image before and/or after gradient computation, or a marker based approach with homotopy modification through morphological reconstruction, etc.
+
+Note: Especially in case you did not implement hw1, you can also use other implementations for the filtering to generate the segmentation function. The core algorithm for the watershed transform must be implemented by yourself without external help or libraries.
+
+
+OUTPUT FILES:
+* 'f1_dinv_wt_4.txt', 'f1_dinv_wt_8.txt' - watershed transform for f1_dinv, 4 and 8-connected WT 
+* 'f2_wt_4.txt', 'f2_wt_8.txt' - watershed transform of f2, 4 and 8-connected WT 
+* file names of your choice for the three images (III), no need to do both 4 and 8-connected here
+* '<Surnames>_IP_hw2_report.txt' including your comments on the second image (8-connected vs. 4-connected) and on any images, code, and further material used for (III).
+
+
+
+File format for input and output (for the first two files): Text file with comma separated values, single blanks after commas, no blanks before end-of-line, end-of-line before end-of-file, such as:
+
+1, 0, 0, 0, 0\n
+1, 11, 0, 0, 0\n
+1, 121, 0, 0, 0\n
+\end-of-file
+
+
+PROGRAMMING LANGUAGE:
+C, C++, Python
+
+
+SUBMISSION REQUIREMENTS / COMMENTS:
+
+* Name your archive file as follows: "<Surnames>_IP_hw2.zip" which should have the following folder hierarchy:
+   1. "src"  - folder with your source code (Makefile etc. if applicable)
+   2. "output" - folder with results
+   3. "report" - add one file "<Surnames>_IP_hw2_report.txt/pdf" comprising (if done in a team of two) a statement of contribution (which parts were done by which teammate?), descriptions and references/source URLs of the chosen experiments/problems from the internet, and, if applicable, references to used material and help (cf. below).
+   3. "input" - folder with initial input images and the additional input files from the last experiments (cf. above)
+
+* Strictly adhere to the specified format for output files, in order to facilitate automated result comparison.
+	
+* Regarding the coding style, commented code with a clear structure and without unnecessary code doubling is preferred.
+
+* Please include a simple Makefile that will be capable to recompile your code, regenerate your results and place them in the output folder, by just typing make.
+
+* Even though the homework is meant to be done by a team of two, students can work on it alone ('solo submission'), and mention this in the report file. 
+
+* You are required to implement the full core part of the homework (algorithm, data structures) yourself (alone or in the team of two) without help from other people, without copying code from somewhere else, and without calling ready-made library functions that already do parts of the core task. 
+
+* You are allowed to accept help on the non-algorithmic parts (loading and writing of files, parsing the command line input, writing a Makefile, etc.), but this help must be clearly referenced in the source code as well as in the report file, similar to any other information source used (for example open source libraries for data input or output). 
+
+* There will be no extension of the deadline. Late submissions will receive zero score. The same (plus possibly other measures) applies for any kind of cheating.
+
+* For teams of two, both team members will receive the same grade (except one team member did not contribute, then the score of that person will be zero)
+
+* For solo submission, we will be somewhat more tolerant in our grading regarding missing items, such that a 100% score can already be reached with a slightly incomplete submission.
+
+
+Feel free to ask any questions, through Piazza (preferrably visible to all).
+-Horst
