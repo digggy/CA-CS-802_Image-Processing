@@ -51,104 +51,107 @@ def initialisations(input_f):
 # # sort the pixels in the order of gray values
 # # put the pixels with the same value in the same vector
 def sort_pixels(input_f):
-    level = [[]] * len(input_f)
-    
+
+    level = [[] for i in range(np.max(input_f)+1)]
     for i in range(len(input_f)):
         for j in range(len(input_f[0])):
-            level[input_f[i,j]].append((i,j))
-    
+            level[input_f[i,j]].append([i,j])
+            
     return level
 
-# def watershed_transform():
-#     connected = []
-#     col = len(input_f)
-#     for h in range(h_min, h_max):
-#         for it in range(len(level[h])):
-#             x_pixel = it[0]
-#             y_pixel = it[1]
+def watershed_transform():
+    connected = []
+    col = len(input_f)
+    for h in range(h_min, h_max):
+        for it in range(len(level[h])):
+            x_pixel = it[0]
+            y_pixel = it[1]
 
-#             output_f[x_pixel][y_pixel] =  mask
+            output_f[x_pixel][y_pixel] =  mask
             
-#             for i in range(Ng_p):
-#                 x_neighbor = x_pixel + x_add[i]
-#                 y_neighbor = y_pixel + y_add[i]
+            for i in range(Ng_p):
+                x_neighbor = x_pixel + x_add[i]
+                y_neighbor = y_pixel + y_add[i]
 
-#                 if (not (x_neighbor >= 0 and line > x_neighbor and y_neighbor >= 0 and y_neighbor > col)):
-#                     continue; 
+                if (not (x_neighbor >= 0 and line > x_neighbor and y_neighbor >= 0 and y_neighbor > col)):
+                    continue; 
 
-#                 if (output_f[x_neighbor][y_neighbor] > 0 or output_f[x_neighbor][y_neighbor] == wshed):
-#                     output_f[x_pixel][y_pixel] = inqueue
-#                     connected.append(it)
+                if (output_f[x_neighbor][y_neighbor] > 0 or output_f[x_neighbor][y_neighbor] == wshed):
+                    output_f[x_pixel][y_pixel] = inqueue
+                    connected.append(it)
 
-#         pixel = []
-#         while(not connected.empty()):
-#             pixel = connected[0]
-#             x_pixel = pixel[0]
-#             y_pixel = pixel[1]
-#             connected.pop(0)
+        pixel = []
+        while(not connected.empty()):
+            pixel = connected[0]
+            x_pixel = pixel[0]
+            y_pixel = pixel[1]
+            connected.pop(0)
 
-#             for i in range(len(Ng_p)):
-#                 x_neighbor = x_pixel + x_add[i]
-#                 y_neighbor = y_pixel + y_add[i]
+            for i in range(len(Ng_p)):
+                x_neighbor = x_pixel + x_add[i]
+                y_neighbor = y_pixel + y_add[i]
             
-#                 if not((x_neighbor >= 0 and line > x_neighbor and y_neighbor >= 0 and y_neighbor < col)):
-#                     continue
+                if not((x_neighbor >= 0 and line > x_neighbor and y_neighbor >= 0 and y_neighbor < col)):
+                    continue
 
-#                 if(output_f[x_neighbor][y_neighbor] > 0):
-#                     if(output_f[x_pixel][y_pixel] == inqueue) or (output_f[x_pixel][y_pixel] == wshed and flag == True): 
-#                         output_f[x_pixel][y_pixel] = output_f[x_neighbr][y_neighbor]
+                if(output_f[x_neighbor][y_neighbor] > 0):
+                    if(output_f[x_pixel][y_pixel] == inqueue) or (output_f[x_pixel][y_pixel] == wshed and flag == True): 
+                        output_f[x_pixel][y_pixel] = output_f[x_neighbr][y_neighbor]
 
-#                     elif (output_f[x_pixel][y_pixel] > 0 and output_matrix[x_pixel][y_pixel] != output_matrix[x_neighbor][y_neighbor]):
-#                         output_f[x_pixel][y_pixel] = wshed
-#                         flag = False
+                    elif (output_f[x_pixel][y_pixel] > 0 and output_matrix[x_pixel][y_pixel] != output_matrix[x_neighbor][y_neighbor]):
+                        output_f[x_pixel][y_pixel] = wshed
+                        flag = False
 
-#                 elif (output_f[x_neighbor][y_neighbor] == wshed):
-#                     if(output_f[x_pixel][y_pixel] == inqueue):
-#                         output_f[x_pixel][y_pixel] = wshed
-#                         flag = True
+                elif (output_f[x_neighbor][y_neighbor] == wshed):
+                    if(output_f[x_pixel][y_pixel] == inqueue):
+                        output_f[x_pixel][y_pixel] = wshed
+                        flag = True
                     
-#                     elif(output_f[x_neighbor][y_neighbor] == mask):
-#                         output_f[x_neighbor][y_neighbor] = inqueue
-#                         connected.append(it)
+                    elif(output_f[x_neighbor][y_neighbor] == mask):
+                        output_f[x_neighbor][y_neighbor] = inqueue
+                        connected.append(it)
 
-#         for it in range(len(level[h])):
-#             x_pixel = it[0]
-#             y_pixel = it[1]
+        for it in range(len(level[h])):
+            x_pixel = it[0]
+            y_pixel = it[1]
 
-#             if(output_f[x_pixel][y_pixel] == mask):
-#                 curr_label += 1
-#                 connected.append(it)
-#                 output_f[x_pixel][y_pixel] = curr_lalbel
+            if(output_f[x_pixel][y_pixel] == mask):
+                curr_label += 1
+                connected.append(it)
+                output_f[x_pixel][y_pixel] = curr_lalbel
 
-#                 new_pixel = []
-#                 while(connected != null):
+                new_pixel = []
+                while(connected != null):
 
-#                     new_pixel = connected[0]
-#                     connected.pop(0)
+                    new_pixel = connected[0]
+                    connected.pop(0)
 
-#                     x_newpixel = new_pixel[0]
-#                     y_newpixel = new_pixel[1]
+                    x_newpixel = new_pixel[0]
+                    y_newpixel = new_pixel[1]
 
-#                     for i in range(Ng_p):
-#                         x_neighbor = x_newpixel + x_add[i]
-#                         y_neighbor = y_newpixel + y_add[i]
+                    for i in range(Ng_p):
+                        x_neighbor = x_newpixel + x_add[i]
+                        y_neighbor = y_newpixel + y_add[i]
 
-#                         if(not (x_neighbor >=0 and line > x_neighbor and y_neighbor >=0 and y_neighbor < col)):
-#                             continue
+                        if(not (x_neighbor >=0 and line > x_neighbor and y_neighbor >=0 and y_neighbor < col)):
+                            continue
 
-#                         if(output_p[x_neighbor][y_neighbor] == mask):
-#                             connected.append((x_neighbor, y_neighbor))
-#                             output_p[x_neighbor][y_neighbor] = curr_label
-#     print(output_p)
+                        if(output_p[x_neighbor][y_neighbor] == mask):
+                            connected.append((x_neighbor, y_neighbor))
+                            output_p[x_neighbor][y_neighbor] = curr_label
+    print(output_p)
 
     
 
 def main(): 
     # initialisation(input)
-    f1 = genfromtxt('../input/f1_dinv.txt',  delimiter=',').astype(int)
-    input_f, output_f = initialisations(f1)
-    print(sort_pixels(input_f)[2])
-
+    image = genfromtxt('../input/f1_dinv.txt',  delimiter=',').astype(int)
+    old_min= np.min(image)
+    image -= old_min   
+    # image = image/np.max(image)
+    input_f, output_f = initialisations(image)
+    sorted_input_f = sort_pixels(input_f)
+    print(sorted_input_f[0])
 
 if __name__ == main():
     main()
