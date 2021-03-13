@@ -59,29 +59,40 @@ def sort_pixels(input_f):
             
     return level
 
-def watershed_transform():
+def watershed_transform(input_f, output_f, level):
+    
     connected = []
     col = len(input_f)
-    for h in range(h_min, h_max):
-        for it in range(len(level[h])):
-            x_pixel = it[0]
-            y_pixel = it[1]
+    h_min = np.min(input_f)
+    h_max = np.max(input_f)
+    global curr_label
+    
 
-            output_f[x_pixel][y_pixel] =  mask
-            
+    for h in range(h_min, h_max):
+        
+        for it in range(len(level[h])):
+            print(level[h][it])
+            # for k in range(len(level[h][it])):
+            # print(level[h][it])
+            x_pixel = level[h][it][0]
+            y_pixel = level[h][it][1]
+
+            output_f[x_pixel, y_pixel] =  mask
+                
             for i in range(Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
+                    
 
                 if (not (x_neighbor >= 0 and line > x_neighbor and y_neighbor >= 0 and y_neighbor > col)):
                     continue; 
 
-                if (output_f[x_neighbor][y_neighbor] > 0 or output_f[x_neighbor][y_neighbor] == wshed):
-                    output_f[x_pixel][y_pixel] = inqueue
-                    connected.append(it)
+                if (output_f[x_neighbor, y_neighbor] > 0 or output_f[x_neighbor, y_neighbor] == wshed):
+                    output_f[x_pixel , y_pixel] = inqueue
+                    connected.append(level[h][it])
 
         pixel = []
-        while(not connected.empty()):
+        while(len(connected) > 0):
             pixel = connected[0]
             x_pixel = pixel[0]
             y_pixel = pixel[1]
@@ -90,38 +101,41 @@ def watershed_transform():
             for i in range(len(Ng_p)):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
-            
+                
                 if not((x_neighbor >= 0 and line > x_neighbor and y_neighbor >= 0 and y_neighbor < col)):
                     continue
 
-                if(output_f[x_neighbor][y_neighbor] > 0):
-                    if(output_f[x_pixel][y_pixel] == inqueue) or (output_f[x_pixel][y_pixel] == wshed and flag == True): 
-                        output_f[x_pixel][y_pixel] = output_f[x_neighbr][y_neighbor]
+                if(output_f[x_neighbor, y_neighbor] > 0):
+                    if(output_f[x_pixel, y_pixel] == inqueue) or (output_f[x_pixel, y_pixel] == wshed and flag == True): 
+                        output_f[x_pixel, y_pixel] = output_f[x_neighbr, y_neighbor]
 
-                    elif (output_f[x_pixel][y_pixel] > 0 and output_matrix[x_pixel][y_pixel] != output_matrix[x_neighbor][y_neighbor]):
-                        output_f[x_pixel][y_pixel] = wshed
+                    elif (output_f[x_pixel, y_pixel] > 0 and output_matrix[x_pixel, y_pixel] != output_matrix[x_neighbor, y_neighbor]):
+                        output_f[x_pixel, y_pixel] = wshed
                         flag = False
 
-                elif (output_f[x_neighbor][y_neighbor] == wshed):
-                    if(output_f[x_pixel][y_pixel] == inqueue):
-                        output_f[x_pixel][y_pixel] = wshed
+                elif (output_f[x_neighbor, y_neighbor] == wshed):
+                    if(output_f[x_pixel, y_pixel] == inqueue):
+                        output_f[x_pixel, y_pixel] = wshed
                         flag = True
-                    
-                    elif(output_f[x_neighbor][y_neighbor] == mask):
-                        output_f[x_neighbor][y_neighbor] = inqueue
-                        connected.append(it)
+                        
+                elif(output_f[x_neighbor, y_neighbor] == mask):
+                    output_f[x_neighbor, y_neighbor] = inqueue
+                    connected.append(level[h][it])
+
 
         for it in range(len(level[h])):
-            x_pixel = it[0]
-            y_pixel = it[1]
+            # for k in range(len(level[h][it])):
+            x_pixel = level[h][it][0]
+            y_pixel = level[h][it][1]
 
-            if(output_f[x_pixel][y_pixel] == mask):
+            if(output_f[x_pixel, y_pixel] == mask):
                 curr_label += 1
-                connected.append(it)
-                output_f[x_pixel][y_pixel] = curr_lalbel
+                connected.append(level[h][it])
+                output_f[x_pixel, y_pixel] = curr_label
 
                 new_pixel = []
-                while(connected != null):
+
+                while(len(connected) > 0):
 
                     new_pixel = connected[0]
                     connected.pop(0)
@@ -136,10 +150,10 @@ def watershed_transform():
                         if(not (x_neighbor >=0 and line > x_neighbor and y_neighbor >=0 and y_neighbor < col)):
                             continue
 
-                        if(output_p[x_neighbor][y_neighbor] == mask):
-                            connected.append((x_neighbor, y_neighbor))
-                            output_p[x_neighbor][y_neighbor] = curr_label
-    print(output_p)
+                        if(output_f[x_neighbor, y_neighbor] == mask):
+                            connected.append([x_neighbor, y_neighbor])
+                            output_f[x_neighbor, y_neighbor] = curr_label
+    return output_f
 
     
 
@@ -151,7 +165,7 @@ def main():
     # image = image/np.max(image)
     input_f, output_f = initialisations(image)
     sorted_input_f = sort_pixels(input_f)
-    print(sorted_input_f[0])
+    print(watershed_transform(input_f, output_f, sorted_input_f))
 
 if __name__ == main():
     main()
