@@ -46,19 +46,34 @@ def main():
     args = my_parser.parse_args()
     
     inputfile = args.input
+    outputfile = args.output
+    #check if the file is valid 
     if inputfile and os.path.isfile(inputfile):
         input_image_extension = os.path.splitext(inputfile)[1]
         img = None
         if(input_image_extension == ".png" or input_image_extension == ".jpg" or input_image_extension == ".jgeg"):
+            # Image grascale intensity is set in the range 0 to 255
             img = io.imread(inputfile, as_gray=True)
             img = img/np.max(img)*255
             img = img.astype(np.uint8)
         elif (input_image_extension == ".txt"):
+            # Image grascale intensity is set in the range 0 to 1
             img = genfromtxt(inputfile, delimiter=',').astype(int)
             img -= np.min(img)
             img = img/np.max(img)
-    # display(img)
+            # display(img)
+    else:
+        print("Your input file doesnt have a valid path.")
     
+    #########################
+    # Actuall Watershed algorithm
+    
+    
+    
+    
+    #########################
+    np.savetxt(outputfile, img_output,
+               delimiter=', ', newline='\n', fmt='%d')
     return 0
 
 if __name__ == "__main__":
