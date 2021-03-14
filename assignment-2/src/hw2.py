@@ -88,14 +88,14 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
                     
-                if (not (x_neighbor >= 0 and line > x_neighbor and y_neighbor >= 0 and y_neighbor > col)):
+                if (not (x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < col)):
                     continue
 
                 if (output_f[x_neighbor, y_neighbor] > 0 or output_f[x_neighbor, y_neighbor] == wshed):
                     output_f[x_pixel, y_pixel] = inqueue
                     connected.append(level[h][it])
-                    
 
+        
         pixel = []
         while(len(connected) > 0):
             
@@ -103,18 +103,17 @@ def watershed_transform(input_f, output_f, level, Ng_p):
             x_pixel = pixel[0]
             y_pixel = pixel[1]
             connected.pop(0)
-
-            for i in range(len(Ng_p)):
+            
+            for i in range(Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
                 
-                if not(x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < col):
+                if (not(x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < col)):
                     continue
 
                 if(output_f[x_neighbor, y_neighbor] > 0):
-
-                    if(output_f[x_pixel, y_pixel] == inqueue) or (output_f[x_pixel, y_pixel] == wshed and flag == True): 
-                        output_f[x_pixel, y_pixel] = output_f[x_neighbr, y_neighbor]
+                    if((output_f[x_pixel, y_pixel] == inqueue) or (output_f[x_pixel, y_pixel] == wshed and flag == True)): 
+                        output_f[x_pixel, y_pixel] = output_f[x_neighbor, y_neighbor]
 
                     elif (output_f[x_pixel, y_pixel] > 0 and output_f[x_pixel, y_pixel] != output_f[x_neighbor, y_neighbor]):
                         output_f[x_pixel, y_pixel] = wshed
@@ -127,14 +126,12 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                         
                 elif(output_f[x_neighbor, y_neighbor] == mask):
                     output_f[x_neighbor, y_neighbor] = inqueue
-                    connected.append(level[h][it])
+                    connected.append((x_neighbor, y_neighbor))
 
 
         for it in range(len(level[h])):
-            # for k in range(len(level[h][it])):
             x_pixel = level[h][it][0]
             y_pixel = level[h][it][1]
-
             if(output_f[x_pixel, y_pixel] == mask):
               
                 curr_label += 1
@@ -168,15 +165,13 @@ def watershed_transform(input_f, output_f, level, Ng_p):
 
 def main(): 
     # initialisation(input)
-    image = genfromtxt('../input/f1_dinv.txt',  delimiter=',').astype(int)
+    image = genfromtxt('../input/f2.txt',  delimiter=',').astype(int)
     old_min= np.min(image)
     image -= old_min   
-    # image = image/np.max(image)
     input_f, output_f = initialisations(image)
-   
-    sorted_input_f = sort_pixels(input_f)
+    sorted_bucket = sort_pixels(input_f)
     Ng_p = 4
-    result = watershed_transform(input_f, output_f, sorted_input_f, Ng_p)
+    result = watershed_transform(input_f, output_f, sorted_bucket, Ng_p)
     # print(result/np.max(result))
     print("With " , Ng_p, "connected neighbors: ")
     print(result)
