@@ -23,27 +23,31 @@ x_add = [-1, 0, 1, 0, -1, 1, 1, -1]
 y_add = [0, 1, 0, -1, 1, 1, -1, -1]
 
 
-line = 0
+row = 0
+col = 0
 flag = False
 cluster = 0
 
 
-
+#######################################################3
+# initialise the output image numpy 
 def initialisations(input_f):
-    global h_min, h_max, cluster, flag, line
-    line = len(input_f)
 
+    global h_min, h_max, cluster, flag
+    row = len(input_f)
+    col = len(input_f[0])
+    
     if h_min > 0:
         h_min = 0
     else:
         h_max -= h_min
 
-    output_f = np.zeros(shape=(line, line))
+    output_f = np.zeros(shape=(row, col))
 
     # convert all pixels from the initial image in positive values
 	# intialize the output matrix with init
-    for i in range(line):
-        for j in range(line):
+    for i in range(row):
+        for j in range(col):
             output_f[i,j] = init
 	
     h_min = 0
@@ -52,9 +56,9 @@ def initialisations(input_f):
 
     return input_f, output_f
 
-
-# # sort the pixels in the order of gray values
-# # put the pixels with the same value in the same vector
+###############################################################
+# sort the pixels in the order of gray values in a nested lislt
+# put the pixels with the same gray value in the same list index
 def sort_pixels(input_f):
 
     level = [[] for i in range(np.max(input_f)+1)]
@@ -70,6 +74,7 @@ def sort_pixels(input_f):
 def watershed_transform(input_f, output_f, level, Ng_p):
     
     fifo = []
+    row = len(input_f)
     col = len(input_f[0])
     h_min = np.min(input_f)
     h_max = np.max(input_f)
@@ -87,7 +92,7 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
                     
-                if (not (x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < col)):
+                if (not (x_neighbor >= 0 and x_neighbor < row and y_neighbor >= 0 and y_neighbor < col)):
                     continue
 
                 if (output_f[x_neighbor, y_neighbor] > 0 or output_f[x_neighbor, y_neighbor] == wshed):
@@ -107,7 +112,7 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
                 
-                if (not(x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < col)):
+                if (not(x_neighbor >= 0 and x_neighbor < row and y_neighbor >= 0 and y_neighbor < col)):
                     continue
 
                 if(output_f[x_neighbor, y_neighbor] > 0):
@@ -151,7 +156,7 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                         y_neighbor = y_newpixel + y_add[i]
                         
 
-                        if(not (x_neighbor >=0 and  x_neighbor < line and y_neighbor >=0 and y_neighbor < col)):
+                        if(not (x_neighbor >=0 and  x_neighbor < row and y_neighbor >=0 and y_neighbor < col)):
                             continue
 
                         if(output_f[x_neighbor, y_neighbor] == mask):
@@ -219,8 +224,7 @@ def main():
     input_f, output_f = initialisations(image)
     sorted_bucket = sort_pixels(input_f)
     img_output = watershed_transform(input_f, output_f, sorted_bucket, Ng_p)
-    np.savetxt(outputfile, img_output,
-               delimiter=', ', newline='\n', fmt='%d')
+    np.savetxt(outputfile, img_output, delimiter=', ', newline='\n', fmt='%d')
 
     plt.imshow(img_output, cmap='gray', vmin=0, vmax=np.max(img_output))
     plt.show()
