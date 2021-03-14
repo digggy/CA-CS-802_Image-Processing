@@ -2,8 +2,12 @@ import math
 import numpy as np
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
-import watershed
 
+import argparse
+import os.path
+
+
+# declaration of constant values and neighbor ranges
 mask = -2
 wshed = 0
 init = -1
@@ -12,8 +16,6 @@ inqueue = -3
 
 h_min = 1000
 h_max = -1000
-input_f = []
-output_f = []
 level = []
 x_add = [-1, 0, 1, 0, -1, 1, 1, -1]
 y_add = [0, 1, 0, -1, 1, 1, -1, -1]
@@ -28,14 +30,7 @@ curr_label = 0
 def initialisations(input_f):
     global h_min, h_max, curr_label, flag, line
     line = len(input_f)
-    # for i in range(line):
-    #     for j in range(line):
-    #         if (input_f[i][j] < h_min):
-    #             h_min = input_f[i, j]
-    #         if (input_f[i,j] > h_max):
-    #             h_max = input_f[i, j]
 
-   
     if h_min > 0:
         h_min = 0
     else:
@@ -48,7 +43,6 @@ def initialisations(input_f):
     for i in range(line):
         for j in range(line):
             output_f[i,j] = init
-            input_f[i, j] -= h_min
 	
     h_min = 0
     curr_label = 0
@@ -68,6 +62,9 @@ def sort_pixels(input_f):
 
     return level
 
+
+##############################
+## Actuall Watershed algorithm
 def watershed_transform(input_f, output_f, level, Ng_p):
     
     connected = []
@@ -164,19 +161,69 @@ def watershed_transform(input_f, output_f, level, Ng_p):
     
 
 def main(): 
-    # initialisation(input)
-    image = genfromtxt('../input/f2.txt',  delimiter=',').astype(int)
-    old_min= np.min(image)
-    image -= old_min   
+
+    my_parser = argparse.ArgumentParser(description='Perform watershed')
+    
+    my_parser.add_argument(
+        '-i',
+        '--input',
+        dest="input",
+        metavar='PATH',
+        type=str,
+        help='the path to input file')
+    
+    my_parser.add_argument(
+        '-n'
+        '--neighbors',
+        dest="neighbors",
+        metavar='N',
+        type=int,
+        help='number of neighbors')
+    
+    my_parser.add_argument(
+        '-o'
+        '--output',
+        dest='output',
+        metavar='PATH',
+        type=str,
+        help='the path to outputfile')
+    
+    args = my_parser.parse_args()
+    image = None
+    inputfile = args.input
+    outputfile = args.output
+    Ng_p = args.neighbors
+    #check if the file is valid 
+    if inputfile and os.path.isfile(inputfile):
+        input_image_extension = os.path.splitext(inputfile)[1]
+        
+        if(input_image_extension == ".png" or input_image_extension == ".jpg" or input_image_extension == ".jgeg"):
+            # Image grascale intensity is set in the range 0 to 255
+            image = io.imread(inputfile, as_gray=True)
+            image = img/np.max(img)*255
+            image = img.astype(np.uint8)
+        elif (input_image_extension == ".txt"):
+            # Image grascale intensity is set in the range 0 to 1
+            image = genfromtxt(inputfile, delimiter=',').astype(int)
+            image -= np.min(image)
+            
+    else:
+        print("Your input file doesnt have a valid path.")
+
+
+    
+    # image = genfromtxt('../input/f2.txt',  delimiter=',').astype(int)
+    
     input_f, output_f = initialisations(image)
     sorted_bucket = sort_pixels(input_f)
-    Ng_p = 4
-    result = watershed_transform(input_f, output_f, sorted_bucket, Ng_p)
-    # print(result/np.max(result))
-    print("With " , Ng_p, "connected neighbors: ")
-    print(result)
-    plt.imshow(result, cmap='gray', vmin=0, vmax=255)
-    plt.show()
+    img_output = watershed_transform(input_f, output_f, sorted_bucket, Ng_p)
+    np.savetxt(outputfile, img_output,
+               delimiter=', ', newline='\n', fmt='%d')
+
+    # plt.imshow(img_output, cmap='gray', vmin=0, vmax=np.max(img_output))
+    # plt.show()
+    # plt.close()
+    
     
 
 if __name__ == main():
