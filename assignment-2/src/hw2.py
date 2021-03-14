@@ -23,12 +23,12 @@ y_add = [0, 1, 0, -1, 1, 1, -1, -1]
 
 line = 0
 flag = False
-curr_label = 0
+cluster = 0
 
 
 
 def initialisations(input_f):
-    global h_min, h_max, curr_label, flag, line
+    global h_min, h_max, cluster, flag, line
     line = len(input_f)
 
     if h_min > 0:
@@ -45,7 +45,7 @@ def initialisations(input_f):
             output_f[i,j] = init
 	
     h_min = 0
-    curr_label = 0
+    cluster = 0
     flag = False
 
     return input_f, output_f
@@ -67,11 +67,11 @@ def sort_pixels(input_f):
 ## Actuall Watershed algorithm
 def watershed_transform(input_f, output_f, level, Ng_p):
     
-    connected = []
-    col = len(input_f[0])
+    fifo = []
+    line = len(input_f[0])
     h_min = np.min(input_f)
     h_max = np.max(input_f)
-    global curr_label, wshed, mask, inqueue, flag
+    global cluster, wshed, mask, inqueue, flag
    
 
     for h in range(h_min, h_max+1):
@@ -85,27 +85,27 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
                     
-                if (not (x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < col)):
+                if (not (x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < line)):
                     continue
 
                 if (output_f[x_neighbor, y_neighbor] > 0 or output_f[x_neighbor, y_neighbor] == wshed):
                     output_f[x_pixel, y_pixel] = inqueue
-                    connected.append(level[h][it])
+                    fifo.append(level[h][it])
 
         
         pixel = []
-        while(len(connected) > 0):
+        while(len(fifo) > 0):
             
-            pixel = connected[0]
+            pixel = fifo[0]
             x_pixel = pixel[0]
             y_pixel = pixel[1]
-            connected.pop(0)
+            fifo.pop(0)
             
             for i in range(Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
                 
-                if (not(x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < col)):
+                if (not(x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < line)):
                     continue
 
                 if(output_f[x_neighbor, y_neighbor] > 0):
@@ -123,7 +123,7 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                         
                 elif(output_f[x_neighbor, y_neighbor] == mask):
                     output_f[x_neighbor, y_neighbor] = inqueue
-                    connected.append((x_neighbor, y_neighbor))
+                    fifo.append((x_neighbor, y_neighbor))
 
 
         for it in range(len(level[h])):
@@ -131,15 +131,15 @@ def watershed_transform(input_f, output_f, level, Ng_p):
             y_pixel = level[h][it][1]
             if(output_f[x_pixel, y_pixel] == mask):
               
-                curr_label += 1
-                connected.append(level[h][it])
-                output_f[x_pixel, y_pixel] = curr_label
+                cluster += 1
+                fifo.append(level[h][it])
+                output_f[x_pixel, y_pixel] = cluster
 
                 new_pixel = []
 
-                while(len(connected) > 0):
-                    new_pixel = connected[0]
-                    connected.pop(0)
+                while(len(fifo) > 0):
+                    new_pixel = fifo[0]
+                    fifo.pop(0)
                     
                     x_newpixel = new_pixel[0]
                     y_newpixel = new_pixel[1]
@@ -149,12 +149,12 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                         y_neighbor = y_newpixel + y_add[i]
                         
 
-                        if(not (x_neighbor >=0 and  x_neighbor < line and y_neighbor >=0 and y_neighbor < col)):
+                        if(not (x_neighbor >=0 and  x_neighbor < line and y_neighbor >=0 and y_neighbor < line)):
                             continue
 
                         if(output_f[x_neighbor, y_neighbor] == mask):
-                            connected.append([x_neighbor, y_neighbor])
-                            output_f[x_neighbor, y_neighbor] = curr_label
+                            fifo.append([x_neighbor, y_neighbor])
+                            output_f[x_neighbor, y_neighbor] = cluster
     
     return output_f
 
