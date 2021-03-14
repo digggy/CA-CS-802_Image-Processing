@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 
 import argparse
 import os.path
+from skimage import color, io, data
+from skimage.color import rgb2gray
 
 
 # declaration of constant values and neighbor ranges
@@ -68,7 +70,7 @@ def sort_pixels(input_f):
 def watershed_transform(input_f, output_f, level, Ng_p):
     
     fifo = []
-    line = len(input_f[0])
+    col = len(input_f[0])
     h_min = np.min(input_f)
     h_max = np.max(input_f)
     global cluster, wshed, mask, inqueue, flag
@@ -85,7 +87,7 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
                     
-                if (not (x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < line)):
+                if (not (x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < col)):
                     continue
 
                 if (output_f[x_neighbor, y_neighbor] > 0 or output_f[x_neighbor, y_neighbor] == wshed):
@@ -105,7 +107,7 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
                 
-                if (not(x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < line)):
+                if (not(x_neighbor >= 0 and x_neighbor < line and y_neighbor >= 0 and y_neighbor < col)):
                     continue
 
                 if(output_f[x_neighbor, y_neighbor] > 0):
@@ -149,7 +151,7 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                         y_neighbor = y_newpixel + y_add[i]
                         
 
-                        if(not (x_neighbor >=0 and  x_neighbor < line and y_neighbor >=0 and y_neighbor < line)):
+                        if(not (x_neighbor >=0 and  x_neighbor < line and y_neighbor >=0 and y_neighbor < col)):
                             continue
 
                         if(output_f[x_neighbor, y_neighbor] == mask):
@@ -200,8 +202,8 @@ def main():
         if(input_image_extension == ".png" or input_image_extension == ".jpg" or input_image_extension == ".jgeg"):
             # Image grascale intensity is set in the range 0 to 255
             image = io.imread(inputfile, as_gray=True)
-            image = img/np.max(img)*255
-            image = img.astype(np.uint8)
+            image -= np.min(image)
+            image = image.astype(np.uint8)
         elif (input_image_extension == ".txt"):
             # Image grascale intensity is set in the range 0 to 1
             image = genfromtxt(inputfile, delimiter=',').astype(int)
@@ -220,8 +222,8 @@ def main():
     np.savetxt(outputfile, img_output,
                delimiter=', ', newline='\n', fmt='%d')
 
-    # plt.imshow(img_output, cmap='gray', vmin=0, vmax=np.max(img_output))
-    # plt.show()
+    plt.imshow(img_output, cmap='gray', vmin=0, vmax=np.max(img_output))
+    plt.show()
     # plt.close()
     
     
