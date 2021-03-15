@@ -326,7 +326,7 @@ def main():
         if(input_image_extension == ".png" or input_image_extension == ".jpg" or input_image_extension == ".jpeg"):
             # Image grascale intensity is set in the range 0 to 255
             image = io.imread(inputfile, as_gray=True)
-            image -= np.min(image)
+            image = image/np.max(image) * 255
             image = image.astype(np.uint8)
         elif (input_image_extension == ".txt"):
             # Image grascale intensity is set in the range 0 to 1
@@ -335,8 +335,6 @@ def main():
 
     else:
         print("Your input file doesnt have a valid path.")
-
-    # SE = np.eye(5)
 
     if (filter_selected == "median"):
         image = filter_image(image, image_name, 'median filter', median_filter)
