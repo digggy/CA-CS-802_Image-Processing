@@ -2,6 +2,7 @@ import math
 import numpy as np
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
+import time
 
 import argparse
 import os.path
@@ -287,11 +288,20 @@ def main():
 
     my_parser.add_argument(
         '-n'
-        '--neighbors',
+        "--neighbors",
         dest="neighbors",
         metavar='N',
         type=int,
         help='number of neighbors')
+
+    my_parser.add_argument(
+        '-f'
+        "--filter",
+        dest="filter",
+        choices=['median', 'balanced'],
+        metavar='FILTER',
+        type=str,
+        help='name of filter')
 
     my_parser.add_argument(
         '-o'
@@ -303,9 +313,12 @@ def main():
 
     args = my_parser.parse_args()
     image = None
+    
     inputfile = args.input
     outputfile = args.output
     Ng_p = args.neighbors
+    filter_selected = args.filter
+    image_name = os.path.splitext(inputfile)[0]
     # check if the file is valid
     if inputfile and os.path.isfile(inputfile):
         input_image_extension = os.path.splitext(inputfile)[1]
@@ -323,10 +336,14 @@ def main():
     else:
         print("Your input file doesnt have a valid path.")
 
-    input_f, output_f = initialisations(image)
-    SE = np.eye(5)
-    input_f = erosion_dilation(input_f, SE, 'e')
+    # SE = np.eye(5)
 
+    if (filter_selected == "median"):
+        image = filter_image(image, image_name, 'median filter', median_filter)
+    elif (filter_selected == "balanced"):
+        image = filter_image(image, image_name, 'median filter', mean_median_balanced_filter)
+    
+    input_f, output_f = initialisations(image)
     sorted_bucket = sort_pixels(input_f)
     img_output = watershed_transform(input_f, output_f, sorted_bucket, Ng_p)
     np.savetxt(outputfile, img_output, delimiter=', ', newline='\n', fmt='%d')
