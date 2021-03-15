@@ -254,7 +254,7 @@ def main():
     if inputfile and os.path.isfile(inputfile):
         input_image_extension = os.path.splitext(inputfile)[1]
         
-        if(input_image_extension == ".png" or input_image_extension == ".jpg" or input_image_extension == ".jgeg"):
+        if(input_image_extension == ".png" or input_image_extension == ".jpg" or input_image_extension == ".jpeg"):
             # Image grascale intensity is set in the range 0 to 255
             image = io.imread(inputfile, as_gray=True)
             image -= np.min(image)
