@@ -29,14 +29,14 @@ flag = False
 cluster = 0
 
 
-#######################################################3
-# initialise the output image numpy 
+# 3
+# initialise the output image numpy
 def initialisations(input_f):
 
     global h_min, h_max, cluster, flag
     row = len(input_f)
     col = len(input_f[0])
-    
+
     if h_min > 0:
         h_min = 0
     else:
@@ -45,11 +45,11 @@ def initialisations(input_f):
     output_f = np.zeros(shape=(row, col))
 
     # convert all pixels from the initial image in positive values
-	# intialize the output matrix with init
+    # intialize the output matrix with init
     for i in range(row):
         for j in range(col):
-            output_f[i,j] = init
-	
+            output_f[i, j] = init
+
     h_min = 0
     cluster = 0
     flag = False
@@ -59,39 +59,40 @@ def initialisations(input_f):
 ###############################################################
 # sort the pixels in the order of gray values in a nested lislt
 # put the pixels with the same gray value in the same list index
+
+
 def sort_pixels(input_f):
 
     level = [[] for i in range(np.max(input_f)+1)]
     for i in range(len(input_f)):
         for j in range(len(input_f[0])):
-            level[input_f[i,j]].append([i,j])
+            level[input_f[i, j]].append([i, j])
 
     return level
 
 
 ##############################
-## Actuall Watershed algorithm
+# Actuall Watershed algorithm
 def watershed_transform(input_f, output_f, level, Ng_p):
-    
+
     fifo = []
     row = len(input_f)
     col = len(input_f[0])
     h_min = np.min(input_f)
     h_max = np.max(input_f)
     global cluster, wshed, mask, inqueue, flag
-   
 
     for h in range(h_min, h_max+1):
         for it in range(len(level[h])):
             x_pixel = level[h][it][0]
             y_pixel = level[h][it][1]
-    
-            output_f[x_pixel, y_pixel] =  mask
-            
+
+            output_f[x_pixel, y_pixel] = mask
+
             for i in range(Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
-                    
+
                 if (not (x_neighbor >= 0 and x_neighbor < row and y_neighbor >= 0 and y_neighbor < col)):
                     continue
 
@@ -99,25 +100,25 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                     output_f[x_pixel, y_pixel] = inqueue
                     fifo.append(level[h][it])
 
-        
         pixel = []
         while(len(fifo) > 0):
-            
+
             pixel = fifo[0]
             x_pixel = pixel[0]
             y_pixel = pixel[1]
             fifo.pop(0)
-            
+
             for i in range(Ng_p):
                 x_neighbor = x_pixel + x_add[i]
                 y_neighbor = y_pixel + y_add[i]
-                
+
                 if (not(x_neighbor >= 0 and x_neighbor < row and y_neighbor >= 0 and y_neighbor < col)):
                     continue
 
                 if(output_f[x_neighbor, y_neighbor] > 0):
-                    if((output_f[x_pixel, y_pixel] == inqueue) or (output_f[x_pixel, y_pixel] == wshed and flag == True)): 
-                        output_f[x_pixel, y_pixel] = output_f[x_neighbor, y_neighbor]
+                    if((output_f[x_pixel, y_pixel] == inqueue) or (output_f[x_pixel, y_pixel] == wshed and flag == True)):
+                        output_f[x_pixel,
+                                 y_pixel] = output_f[x_neighbor, y_neighbor]
 
                     elif (output_f[x_pixel, y_pixel] > 0 and output_f[x_pixel, y_pixel] != output_f[x_neighbor, y_neighbor]):
                         output_f[x_pixel, y_pixel] = wshed
@@ -127,17 +128,16 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                     if(output_f[x_pixel, y_pixel] == inqueue):
                         output_f[x_pixel, y_pixel] = wshed
                         flag = True
-                        
+
                 elif(output_f[x_neighbor, y_neighbor] == mask):
                     output_f[x_neighbor, y_neighbor] = inqueue
                     fifo.append((x_neighbor, y_neighbor))
-
 
         for it in range(len(level[h])):
             x_pixel = level[h][it][0]
             y_pixel = level[h][it][1]
             if(output_f[x_pixel, y_pixel] == mask):
-              
+
                 cluster += 1
                 fifo.append(level[h][it])
                 output_f[x_pixel, y_pixel] = cluster
@@ -147,23 +147,23 @@ def watershed_transform(input_f, output_f, level, Ng_p):
                 while(len(fifo) > 0):
                     new_pixel = fifo[0]
                     fifo.pop(0)
-                    
+
                     x_newpixel = new_pixel[0]
                     y_newpixel = new_pixel[1]
 
                     for i in range(Ng_p):
                         x_neighbor = x_newpixel + x_add[i]
                         y_neighbor = y_newpixel + y_add[i]
-                        
 
-                        if(not (x_neighbor >=0 and  x_neighbor < row and y_neighbor >=0 and y_neighbor < col)):
+                        if(not (x_neighbor >= 0 and x_neighbor < row and y_neighbor >= 0 and y_neighbor < col)):
                             continue
 
                         if(output_f[x_neighbor, y_neighbor] == mask):
                             fifo.append([x_neighbor, y_neighbor])
                             output_f[x_neighbor, y_neighbor] = cluster
-    
+
     return output_f
+
 
 def erosion_dilation(img, SE, operation_type):
     # if(direction == "vertical"):
@@ -217,10 +217,66 @@ def erosion_dilation(img, SE, operation_type):
                 img_output[i, j] = np.amax(img_subarr_filtered)
     return img_output
 
-def main(): 
+# global for filtering
+BALANCE_ALPHA = 0.2
+
+def get_median(filter_area):
+    res = np.median(filter_area)
+    return res
+
+def median_filter(image, height, width):
+    for row in range(1, height + 1):
+        for column in range(1, width + 1):
+            # 3 x 3 kernel
+            filter_area = image[row - 1:row + 2, column - 1:column + 2]
+            image[row][column] = get_median(filter_area)
+    return image
+
+def get_kernel():
+    return np.ones((3, 3), np.float32) / 9
+
+
+def get_mean_with_kernel(filter_area, kernel):
+    return np.sum(np.multiply(kernel, filter_area))
+
+def mean_filter(image, height, width):
+    # Set the kernel.
+    kernel = get_kernel()
+
+    for row in range(1, height + 1):
+        for column in range(1, width + 1):
+            # Get the area to be filtered with range indexing.
+            filter_area = image[row - 1:row + 2, column - 1:column + 2]
+            res = get_mean_with_kernel(filter_area, kernel)
+            image[row][column] = res
+
+    return image
+
+def mean_median_balanced_filter(image, height, width):
+    for row in range(1, height + 1):
+        for column in range(1, width + 1):
+            filter_area = image[row - 1:row + 2, column - 1:column + 2]
+            mean_filter_vector = get_mean_with_kernel(filter_area, get_kernel())
+            median_filter_vector = get_median(filter_area)
+            image[row][column] = BALANCE_ALPHA * mean_filter_vector + (1 - BALANCE_ALPHA) * median_filter_vector
+    return image
+
+def filter_image(image, image_name, filter_name, filtering_function):
+    # Get the image size for the kernel looping.
+    height, width = image.shape[:2]
+    # Add 1px reflected padding to allow kernels to work properly.
+    image = np.pad(image, 1, mode='edge')
+    print("Calculating %s for %s" % (filter_name, image_name))
+    start_time = time.time()
+    res = filtering_function(image, height, width)
+    print("Successfully calculated %s for %s in %s seconds." %
+          (filter_name, image_name, str(time.time() - start_time)))
+    return res
+
+def main():
 
     my_parser = argparse.ArgumentParser(description='Perform watershed')
-    
+
     my_parser.add_argument(
         '-i',
         '--input',
@@ -228,7 +284,7 @@ def main():
         metavar='PATH',
         type=str,
         help='the path to input file')
-    
+
     my_parser.add_argument(
         '-n'
         '--neighbors',
@@ -236,7 +292,7 @@ def main():
         metavar='N',
         type=int,
         help='number of neighbors')
-    
+
     my_parser.add_argument(
         '-o'
         '--output',
@@ -244,16 +300,16 @@ def main():
         metavar='PATH',
         type=str,
         help='the path to outputfile')
-    
+
     args = my_parser.parse_args()
     image = None
     inputfile = args.input
     outputfile = args.output
     Ng_p = args.neighbors
-    #check if the file is valid 
+    # check if the file is valid
     if inputfile and os.path.isfile(inputfile):
         input_image_extension = os.path.splitext(inputfile)[1]
-        
+
         if(input_image_extension == ".png" or input_image_extension == ".jpg" or input_image_extension == ".jpeg"):
             # Image grascale intensity is set in the range 0 to 255
             image = io.imread(inputfile, as_gray=True)
@@ -263,15 +319,13 @@ def main():
             # Image grascale intensity is set in the range 0 to 1
             image = genfromtxt(inputfile, delimiter=',').astype(int)
             image -= np.min(image)
-            
+
     else:
         print("Your input file doesnt have a valid path.")
 
-
-    
     input_f, output_f = initialisations(image)
     SE = np.eye(5)
-    input_f =  erosion_dilation(input_f, SE, 'e')
+    input_f = erosion_dilation(input_f, SE, 'e')
 
     sorted_bucket = sort_pixels(input_f)
     img_output = watershed_transform(input_f, output_f, sorted_bucket, Ng_p)
@@ -280,8 +334,7 @@ def main():
     plt.imshow(img_output, cmap='gray', vmin=0, vmax=np.max(img_output))
     plt.show()
     # plt.close()
-    
-    
+
 
 if __name__ == main():
     main()
