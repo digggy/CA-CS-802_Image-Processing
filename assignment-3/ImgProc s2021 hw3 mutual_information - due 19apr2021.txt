@@ -1,0 +1,70 @@
+Image Processing (ImgProc) 
+Course Spring 2021
+Homework 3 "MUTUAL INFORMATION"
+
+
+HANDED OUT: 09-APR-2021
+DUE DATE / TIME: 19-APR-2021, 23:59 h
+
+
+SUBMISSION MODE:
+Send your homework implementation and results, following the submission requirements as explained below, via e-mail (subject: "ImgProc hw3 submission") to: 
+h.hahn@jacobs-university.de (instructor)
+
+
+TASK:
+
+* Implement an algorithm from scratch for the similarity metric "mutual information" for two gray scale images according to Eq. 1 in 
+https://en.wikipedia.org/wiki/Mutual_information#In_terms_of_PMFs_for_discrete_distributions
+
+* Details for the implementation: 
+  - add one parameter 'bin_size' that controls how many neighboring gray values are treated identical in the p(x), p(y), and p(x,y) statements.
+  - p(x) and p(y), in the wikipedia page called 'marginal probability mass funtion', are in our case just the intensity histograms of the single images (overlapping region). x and y are the intensity values for each of the two images, respectively.
+  - p(x,y), in the wikipedia page called 'joint probability mass funtion', is in our case the two-dimensional histogram for the two images (green and red, in the overlapping region). Two-dimensional histogram means that you count for each bin (x,y) how often this gray-value combination occured across all image positions.
+  - make sure that p(x), p(y), and p(x,y) are normalized each, such that the sum over all (1d or 2d) histogram entries is 1.0 in all cases.
+
+* Choose three different color images from the internet (or your own camera) and separate the green and red channels as two separate gray scale images each.
+
+* Crop the green channel images by cutting 20 pixels from the left and right sides, respectively - resulting in a cropped green channel image with 40 pixels smaller than the red channel image.
+
+* Now virtually move the red channel images (as template image) in x-direction over the corresponding green channel image (as reference image) in 41 steps from left to right, and compute the mutual information of the overlapping regions for every step.
+
+* Plot the mutual information as a function of the x-position of the red channel image for all three chosen red/green image pairs.
+
+* For one of the three images, add at least two different levels of pixel noise (noise model - Gaussian or other - at your choice), and compare the resulting plots for three different bin_size values each - and discuss your findings (report.txt). The highest level of noise should be such that the image registration with the smallest bin size does not work anymore, but with the largest bin size still does.
+
+
+RESULT FILES:
+* "mutual information plot" graphics files for each of the three chosen image pairs.
+* one additional combined plot for one of the chosen images for three different bin_size values, and three different noise levels including the original image (total of nine curves combined in this plot).
+
+
+PROGRAMMING LANGUAGE:
+C, C++, or Python
+
+
+SUBMISSION REQUIREMENTS / COMMENTS:
+
+* Name your archive file as follows: "<Surnames>_IP_hw3.zip" which should have the following folder hierarchy:
+   1. "src"  - folder with your source code (Makefile etc. if applicable)
+   2. "output" - folder with results
+   3. "report" - add one file "<Surnames>_IP_hw3_report.txt/pdf" comprising (if done in a team of two) a statement of contribution (which parts were done by which teammate?), descriptions and references/source URLs of the chosen experiments/images from the internet, and, if applicable, references to used material and help (cf. below).
+   4. "input" - folder with initial input images 
+
+* Regarding the coding style, commented code with a clear structure and without unnecessary code doubling is preferred.
+
+* Even though the homework is meant to be done by a team of two, students can work on it alone ('solo submission'), and mention this in the report file. 
+
+* You are required to implement the full core part of the homework (step-by-step algorithm, chosing appropriate data structures, etc.) yourself (alone or in the team of two) without help from other people, without copying code from somewhere else, and without calling ready-made library functions that already do parts of the core task. 
+
+* You are allowed to accept help on the non-algorithmic parts (loading and writing of files, parsing the command line input, writing a Makefile, etc.), but this help must be clearly referenced in the source code as well as in the report file, similar to any other information source used (for example open source libraries for data input or output). 
+
+* There will be no extension of the deadline. Late submissions will receive zero score. The same (plus possibly more severe measures) applies for any kind of cheating.
+
+* For teams of two, both team members will receive the same grade (except one team member did not contribute, then the score of that person will be zero)
+
+* For solo submission, we will be somewhat more tolerant in our grading regarding missing items, such that a 100% score can already be reached with a slightly incomplete submission, e.g. without the bin-size or noise experiments.
+
+
+Feel free to ask any questions, always through Piazza (preferrably visible to all).
+-Horst
