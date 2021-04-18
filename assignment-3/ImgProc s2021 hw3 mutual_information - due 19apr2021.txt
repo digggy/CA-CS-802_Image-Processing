@@ -19,7 +19,10 @@ https://en.wikipedia.org/wiki/Mutual_information#In_terms_of_PMFs_for_discrete_d
 
 * Details for the implementation: 
   - add one parameter 'bin_size' that controls how many neighboring gray values are treated identical in the p(x), p(y), and p(x,y) statements.
-  - p(x) and p(y), in the wikipedia page called 'marginal probability mass funtion', are in our case just the intensity histograms of the single images (overlapping region). x and y are the intensity values for each of the two images, respectively.
+  - p(x) and p(y), in the wikipedia page called 'marginal probability mass funtion', are in our case just the intensity 
+  
+  
+  histograms of the single images (overlapping region). x and y are the intensity values for each of the two images, respectively.
   - p(x,y), in the wikipedia page called 'joint probability mass funtion', is in our case the two-dimensional histogram for the two images (green and red, in the overlapping region). Two-dimensional histogram means that you count for each bin (x,y) how often this gray-value combination occured across all image positions.
   - make sure that p(x), p(y), and p(x,y) are normalized each, such that the sum over all (1d or 2d) histogram entries is 1.0 in all cases.
 
