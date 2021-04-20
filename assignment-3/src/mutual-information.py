@@ -44,6 +44,7 @@ def binSizeChangeAlt(img):
     top, bottoms = reshapeImage(img)
     mis = {}
     binses = set([int(256/x) for x in range(1,256)])
+    print(binses)
     for binss in binses:
         hist = np.histogram2d(np.asarray(top).flatten(), np.asarray(bottoms[20]).flatten(), bins=binss)
         hist_img = Image.fromarray(hist[0], 'RGB')
@@ -55,12 +56,12 @@ def binSizeChangeAlt(img):
 
 
 ### calculate mutual information and save plot results
-def mutuallInformation(img, img_name):
+def mutuallInformation(img, img_name, bin_size):
     fig = plt.figure()
     plt.ylabel('Mutual Information')
     plt.xlabel('Image Translations')
-    sns.lineplot(x=[x for x in range(41)], y=mutualInfoCalc(img, 256))
-    translations_outputImgPath = "../output/" + img_name + "_translations"
+    sns.lineplot(x=[x for x in range(41)], y=mutualInfoCalc(img, bin_size))
+    translations_outputImgPath = "../output/" + img_name + "_binSize_" + str(bin_size) 
     plt.savefig(translations_outputImgPath)
 
     fig = plt.figure()
@@ -69,7 +70,7 @@ def mutuallInformation(img, img_name):
     mis = binSizeChangeAlt(img)
     x, y = zip(*(sorted(mis.items())))
     sns.lineplot(x=x, y=y)
-    binSize_outputImgPath = "../output/" + img_name + "_binSize"
+    binSize_outputImgPath = "../output/" + img_name + "binNumCurve"
     plt.savefig(binSize_outputImgPath)
 
 
@@ -86,9 +87,11 @@ def main():
     img_name = img_path[len("../input/"): -len(".jpg")]
 
     noisy_img = addNoise(input_img, "salt");
-    noisy_img = addNoise(noisy_img, "salt");
+    noisy_img = addNoise(noisy_img, "gaussian");
 
-    mutuallInformation(noisy_img, img_name)
+    mutuallInformation(noisy_img, img_name, 15)
+    mutuallInformation(noisy_img, img_name, 50)
+    mutuallInformation(noisy_img, img_name, 256)
 
 if __name__ == '__main__':
     main()
