@@ -23,15 +23,12 @@ def mutualInfoCalc(img, num_bins):
         mis.append(calculateEntropy(top_hist[0]) + calculateEntropy(bot_hist[0]) - calculateEntropy(np.asarray(hist_img).flatten()))
     return mis
 
-### return R,G,B channels of the input image
-def splitImage(img):
-    split_img = Image.Image.split(img)
-    return split_img[0], split_img[1], split_img[2]
 
-
-### crop red and green channel images according to the assignment's description
+### split the image into RGB channels, and crop red and green channels
+### of the original image according to the assignment's description
 def cropImage(img):
-    red, green, blue = splitImage(img)
+    split_img = Image.Image.split(img)
+    red, green, blue = split_img[0], split_img[1], split_img[2]
     width, height = img.size
     top = red.crop((20, 0, width-20, height))
     return top, [green.crop((40-x, 0, width-x, height)) for x in range(40, -1, -1)]
