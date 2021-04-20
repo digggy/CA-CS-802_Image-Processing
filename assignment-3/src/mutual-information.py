@@ -10,7 +10,8 @@ from skimage import io
 def calculateEntropy(X):
     uniq = set(X)
     P = [np.mean(X == x) for x in uniq]
-    return sum(-p * np.log2(p) for p in P)
+    print(P)
+    return sum(p * np.log2(p) for p in P)
 
 
 ### main calculation step of mutual information
@@ -44,7 +45,6 @@ def binSizeChangeAlt(img):
     top, bottoms = reshapeImage(img)
     mis = {}
     binses = set([int(256/x) for x in range(1,256)])
-    print(binses)
     for binss in binses:
         hist = np.histogram2d(np.asarray(top).flatten(), np.asarray(bottoms[20]).flatten(), bins=binss)
         hist_img = Image.fromarray(hist[0], 'RGB')
