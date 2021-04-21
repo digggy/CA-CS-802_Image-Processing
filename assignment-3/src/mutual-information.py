@@ -80,41 +80,61 @@ def addNoise(img, mode):
     
 
 def main():
-    penguin_path = "../input/penguins.jpg"
-    # input_img = Image.open(img_path)
-    penguin_img = skimage.io.imread(penguin_path)/255.0
-    penguin_name = penguin_path[len("../input/"): -len(".jpg")]
+    # penguin_path = "../input/penguins.jpg"
+    # penguin_img = skimage.io.imread(penguin_path)/255.0
+    # penguin_name = penguin_path[len("../input/"): -len(".jpg")]
 
-    noisy_penguin_img = addNoise(penguin_img, "salt");
-    noisy_penguin_img = addNoise(noisy_penguin_img, "gaussian");
+    # noisy_penguin_img = addNoise(penguin_img, "salt");
+    # noisy_penguin_img = addNoise(noisy_penguin_img, "gaussian");
 
-    mutuallInformation(noisy_penguin_img, penguin_name, 15)
-    mutuallInformation(noisy_penguin_img, penguin_name, 50)
-    mutuallInformation(noisy_penguin_img, penguin_name, 256)
+    # mutuallInformation(noisy_penguin_img, penguin_name, 15)
+    # mutuallInformation(noisy_penguin_img, penguin_name, 50)
+    # mutuallInformation(noisy_penguin_img, penguin_name, 256)
 
-    cells_path = "../input/cells-rgb.jpg"
-    # input_img = Image.open(img_path)
-    cells_img = skimage.io.imread(cells_path)/255.0
-    cells_name = cells_path[len("../input/"): -len(".jpg")]
+    # cells_path = "../input/cells-rgb.jpg"s
+    # cells_img = skimage.io.imread(cells_path)/255.0
+    # cells_name = cells_path[len("../input/"): -len(".jpg")]
 
-    noisy_cells_img = addNoise(cells_img, "salt");
-    noisy_cells_img = addNoise(noisy_cells_img, "gaussian");
+    # noisy_cells_img = addNoise(cells_img, "salt");
+    # noisy_cells_img = addNoise(noisy_cells_img, "gaussian");
 
-    mutuallInformation(noisy_cells_img, cells_name, 15)
-    mutuallInformation(noisy_cells_img, cells_name, 50)
-    mutuallInformation(noisy_cells_img, cells_name, 256)
+    # mutuallInformation(noisy_cells_img, cells_name, 15)
+    # mutuallInformation(noisy_cells_img, cells_name, 50)
+    # mutuallInformation(noisy_cells_img, cells_name, 256)
 
-    nature_path = "../input/nature2.jpg"
-    # input_img = Image.open(img_path)
-    nature_img = skimage.io.imread(nature_path)/255.0
-    nature_name = nature_path[len("../input/"): -len(".jpg")]
+    # nature_path = "../input/nature2.jpg"
+    # nature_img = skimage.io.imread(nature_path)/255.0
+    # nature_name = nature_path[len("../input/"): -len(".jpg")]
 
-    noisy_nature_img = addNoise(nature_img, "salt");
-    noisy_nature_img = addNoise(noisy_nature_img, "gaussian");
+    # noisy_nature_img = addNoise(nature_img, "salt");
+    # noisy_nature_img = addNoise(noisy_nature_img, "gaussian");
 
-    mutuallInformation(noisy_nature_img, nature_name, 15)
-    mutuallInformation(noisy_nature_img, nature_name, 50)
-    mutuallInformation(noisy_nature_img, nature_name, 256)
+    # mutuallInformation(noisy_nature_img, nature_name, 15)
+    # mutuallInformation(noisy_nature_img, nature_name, 50)
+    # mutuallInformation(noisy_nature_img, nature_name, 256)
+
+
+    # guitar_path = "../input/guitar.jpg"
+    # guitar_img = skimage.io.imread(guitar_path)/255.0
+    # guitar_name = guitar_path[len("../input/"): -len(".jpg")]
+
+    # noisy_guitar_img = addNoise(guitar_img, "salt");
+    # noisy_guitar_img = addNoise(noisy_guitar_img, "gaussian");
+
+    # mutuallInformation(noisy_guitar_img, guitar_name, 15)
+    # mutuallInformation(noisy_guitar_img, guitar_name, 50)
+    # mutuallInformation(noisy_guitar_img, guitar_name, 256)
+
+    flower_path = "../input/flower.jpg"
+    flower_img = skimage.io.imread(flower_path)/255.0
+    flower_name = flower_path[len("../input/"): -len(".jpg")]
+
+    noisy_flower_img = addNoise(flower_img, "salt");
+    noisy_flower_img = addNoise(noisy_flower_img, "gaussian");
+
+    mutuallInformation(noisy_flower_img, flower_name, 15)
+    mutuallInformation(noisy_flower_img, flower_name, 50)
+    mutuallInformation(noisy_flower_img, flower_name, 256)
 
 if __name__ == '__main__':
     main()
