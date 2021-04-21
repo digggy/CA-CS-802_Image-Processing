@@ -10,7 +10,6 @@ from skimage import io
 def calculateEntropy(X):
     uniq = set(X)
     P = [np.mean(X == x) for x in uniq]
-    print(P)
     return sum(p * np.log2(p) for p in P)
 
 
@@ -81,17 +80,41 @@ def addNoise(img, mode):
     
 
 def main():
-    img_path = "../input/puffin.jpg"
+    penguin_path = "../input/penguins.jpg"
     # input_img = Image.open(img_path)
-    input_img = skimage.io.imread(img_path)/255.0
-    img_name = img_path[len("../input/"): -len(".jpg")]
+    penguin_img = skimage.io.imread(penguin_path)/255.0
+    penguin_name = penguin_path[len("../input/"): -len(".jpg")]
 
-    noisy_img = addNoise(input_img, "salt");
-    noisy_img = addNoise(noisy_img, "gaussian");
+    noisy_penguin_img = addNoise(penguin_img, "salt");
+    noisy_penguin_img = addNoise(noisy_penguin_img, "gaussian");
 
-    mutuallInformation(noisy_img, img_name, 15)
-    mutuallInformation(noisy_img, img_name, 50)
-    mutuallInformation(noisy_img, img_name, 256)
+    mutuallInformation(noisy_penguin_img, penguin_name, 15)
+    mutuallInformation(noisy_penguin_img, penguin_name, 50)
+    mutuallInformation(noisy_penguin_img, penguin_name, 256)
+
+    cells_path = "../input/cells-rgb.jpg"
+    # input_img = Image.open(img_path)
+    cells_img = skimage.io.imread(cells_path)/255.0
+    cells_name = cells_path[len("../input/"): -len(".jpg")]
+
+    noisy_cells_img = addNoise(cells_img, "salt");
+    noisy_cells_img = addNoise(noisy_cells_img, "gaussian");
+
+    mutuallInformation(noisy_cells_img, cells_name, 15)
+    mutuallInformation(noisy_cells_img, cells_name, 50)
+    mutuallInformation(noisy_cells_img, cells_name, 256)
+
+    nature_path = "../input/nature2.jpg"
+    # input_img = Image.open(img_path)
+    nature_img = skimage.io.imread(nature_path)/255.0
+    nature_name = nature_path[len("../input/"): -len(".jpg")]
+
+    noisy_nature_img = addNoise(nature_img, "salt");
+    noisy_nature_img = addNoise(noisy_nature_img, "gaussian");
+
+    mutuallInformation(noisy_nature_img, nature_name, 15)
+    mutuallInformation(noisy_nature_img, nature_name, 50)
+    mutuallInformation(noisy_nature_img, nature_name, 256)
 
 if __name__ == '__main__':
     main()
